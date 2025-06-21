@@ -16,10 +16,19 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Configure CORS
+# Configure CORS with deployment-friendly settings
+allowed_origins = [
+    "http://localhost:3000",  # Local development
+    "http://127.0.0.1:3000",  # Local development alternative
+]
+
+# Add production origins from environment
+if settings.allowed_origins:
+    allowed_origins.extend(settings.allowed_origins)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React dev server
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,11 +43,15 @@ app.include_router(plans.router, prefix="/api/plans", tags=["Plans"])
 
 @app.get("/")
 async def root():
-    return {"message": "Smart Fitness & Nutrition Coach API"}
+    return {
+        "message": "Smart Fitness & Nutrition Coach API",
+        "status": "healthy",
+        "version": "1.0.0"
+    }
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy", "database": "connected"}
 
 if __name__ == "__main__":
     import uvicorn
