@@ -2,6 +2,24 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, JSO
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from database import Base
+from enum import Enum
+
+class GenderEnum(str, Enum):
+    MALE = "male"
+    FEMALE = "female"
+    OTHER = "other"
+
+class ActivityLevelEnum(str, Enum):
+    SEDENTARY = "sedentary"
+    LIGHT = "light"
+    MODERATE = "moderate"
+    ACTIVE = "active"
+    VERY_ACTIVE = "very_active"
+
+class GoalEnum(str, Enum):
+    LOSE_WEIGHT = "weight_loss"
+    MAINTAIN = "maintenance"
+    GAIN_MUSCLE = "muscle_gain"
 
 class User(Base):
     __tablename__ = "users"
@@ -10,6 +28,20 @@ class User(Base):
     email = Column(String(255), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    is_active = Column(Integer, default=1)  # 1 for active, 0 for inactive
+    
+    # Profile fields
+    age = Column(Integer, nullable=True)
+    gender = Column(String(50), nullable=True)
+    height_cm = Column(Integer, nullable=True)
+    weight_kg = Column(Float, nullable=True)
+    activity_level = Column(String(50), nullable=True)
+    goal = Column(String(50), nullable=True)
+    
+    # Calculated fields
+    bmr = Column(Float, nullable=True)
+    tdee = Column(Float, nullable=True)
+    target_calories = Column(Float, nullable=True)
 
     # Relationships
     profile = relationship("UserProfile", back_populates="user", uselist=False)
