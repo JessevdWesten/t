@@ -2,6 +2,7 @@
   "name": "fitgenius-frontend",
   "version": "2.0.0",
   "description": "FitGenius - Your Ultimate AI-Powered Fitness & Nutrition Platform",
+  "homepage": "https://jessevdwesten.github.io/t",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
@@ -32,9 +33,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -59,8 +62,7 @@
     "@types/react-dom": "^18.0.11",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.7"
-  },
-  "homepage": ".",
-  "proxy": "https://fitnesstracker-backend-docker.onrender.com"
-} 
+    "tailwindcss": "^3.2.7",
+    "gh-pages": "^5.0.0"
+  }
+}
