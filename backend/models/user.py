@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, JSON, Boolean
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from database import Base
@@ -42,11 +42,25 @@ class User(Base):
     bmr = Column(Float, nullable=True)
     tdee = Column(Float, nullable=True)
     target_calories = Column(Float, nullable=True)
+    
+    # Workout preferences
+    available_equipment = Column(JSON, nullable=True)  # List of available equipment
+    workout_days_per_week = Column(Integer, nullable=True)
+    workout_duration_minutes = Column(Integer, nullable=True)
+    
+    # Dietary preferences
+    is_vegetarian = Column(Boolean, default=False)
+    is_vegan = Column(Boolean, default=False)
+    is_gluten_free = Column(Boolean, default=False)
+    is_paleo = Column(Boolean, default=False)
+    is_keto = Column(Boolean, default=False)
+    allergies = Column(String(500), nullable=True)  # Comma-separated list
 
     # Relationships
     profile = relationship("UserProfile", back_populates="user", uselist=False)
     generated_plans = relationship("GeneratedPlan", back_populates="user")
     feedback_logs = relationship("UserFeedbackLog", back_populates="user")
+    plans = relationship("Plan", back_populates="user")
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"
