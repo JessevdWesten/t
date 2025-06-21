@@ -61,7 +61,7 @@ class ExerciseResponse(ExerciseBase):
     is_active: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ExerciseFilter(BaseModel):
     muscle_group: Optional[MuscleGroupEnum] = None

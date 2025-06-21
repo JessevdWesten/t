@@ -38,7 +38,7 @@ class PlanResponse(PlanBase):
     is_active: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PlanGenerationRequest(BaseModel):
     plan_type: PlanTypeEnum

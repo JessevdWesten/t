@@ -67,7 +67,7 @@ class UserResponse(UserBase):
     target_calories: Optional[float] = None
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Token Schemas
 class Token(BaseModel):
