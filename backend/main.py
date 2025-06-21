@@ -534,53 +534,14 @@ except ImportError as e:
     logger.warning(f"⚠️ Some advanced features unavailable: {e}")
     # Graceful degradation - core functionality still works
 
-# Custom documentation endpoints with enhanced styling
+# Ultra-simple working documentation endpoint
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
-    """Enhanced Swagger UI with custom styling"""
-    from fastapi.responses import HTMLResponse
-    
-    # Create custom HTML with embedded CSS
-    html_content = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>{app.title} - Interactive API Documentation</title>
-        <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.10.5/swagger-ui.css" />
-        {custom_css}
-    </head>
-    <body>
-        <div id="swagger-ui"></div>
-        <script src="https://unpkg.com/swagger-ui-dist@5.10.5/swagger-ui-bundle.js"></script>
-        <script>
-            SwaggerUIBundle({{
-                url: '{app.openapi_url}',
-                dom_id: '#swagger-ui',
-                presets: [
-                    SwaggerUIBundle.presets.apis,
-                    SwaggerUIBundle.presets.standalone
-                ],
-                plugins: [
-                    SwaggerUIBundle.plugins.DownloadUrl
-                ],
-                layout: "StandaloneLayout",
-                syntaxHighlight: {{
-                    theme: "arta"
-                }},
-                tryItOutEnabled: true,
-                displayRequestDuration: true,
-                filter: true,
-                showExtensions: true,
-                showCommonExtensions: true,
-                deepLinking: true,
-                oauth2RedirectUrl: '{app.swagger_ui_oauth2_redirect_url}'
-            }});
-        </script>
-    </body>
-    </html>
-    """
-    
-    return HTMLResponse(content=html_content)
+    """Working Swagger UI documentation"""
+    return get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=f"{app.title} - API Documentation"
+    )
 
 @app.get("/redoc", include_in_schema=False)
 async def redoc_html():
