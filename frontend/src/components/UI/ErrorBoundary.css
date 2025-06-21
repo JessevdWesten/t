@@ -1,0 +1,211 @@
+/* Error Boundary Styles */
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 2rem;
+}
+
+[data-theme="dark"] .error-boundary {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.error-container {
+  max-width: 600px;
+  text-align: center;
+  background: white;
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+[data-theme="dark"] .error-container {
+  background: #1e293b;
+  border-color: #475569;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-radius: 50%;
+  margin: 0 auto 2rem;
+  color: white;
+  font-size: 2rem;
+}
+
+.error-container h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+[data-theme="dark"] .error-container h1 {
+  color: #f8fafc;
+}
+
+.error-message {
+  font-size: 1.1rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+[data-theme="dark"] .error-message {
+  color: #cbd5e1;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.error-details {
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.error-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 1rem;
+}
+
+.error-stack {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+[data-theme="dark"] .error-stack {
+  background: #0f172a;
+  border-color: #475569;
+}
+
+.error-stack h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem 0;
+  color: #374151;
+}
+
+[data-theme="dark"] .error-stack h4 {
+  color: #f8fafc;
+}
+
+.error-stack pre {
+  font-size: 0.8rem;
+  color: #64748b;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+[data-theme="dark"] .error-stack pre {
+  color: #94a3b8;
+}
+
+.error-suggestions {
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+[data-theme="dark"] .error-suggestions {
+  background: rgba(14, 165, 233, 0.1);
+  border-color: #0ea5e9;
+}
+
+.error-suggestions h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0284c7;
+  margin-bottom: 1rem;
+}
+
+.error-suggestions ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.error-suggestions li {
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+[data-theme="dark"] .error-suggestions li {
+  color: #cbd5e1;
+}
+
+.error-contact {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+[data-theme="dark"] .error-contact {
+  border-top-color: #475569;
+}
+
+.error-contact p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+
+[data-theme="dark"] .error-contact p {
+  color: #94a3b8;
+}
+
+.error-contact a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.error-contact a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .error-boundary {
+    padding: 1rem;
+  }
+
+  .error-container {
+    padding: 2rem;
+  }
+
+  .error-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .error-actions {
+    flex-direction: column;
+  }
+
+  .error-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+} 

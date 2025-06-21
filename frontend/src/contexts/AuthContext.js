@@ -1,158 +1,298 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { authAPI } from '../utils/api';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 import toast from 'react-hot-toast';
 
-// Auth context
 const AuthContext = createContext();
 
-// Auth reducer
-const authReducer = (state, action) => {
-  switch (action.type) {
-    case 'SET_LOADING':
-      return { ...state, isLoading: action.payload };
-    case 'SET_USER':
-      return { 
-        ...state, 
-        user: action.payload, 
-        isAuthenticated: !!action.payload,
-        isLoading: false 
-      };
-    case 'SET_TOKEN':
-      return { ...state, token: action.payload };
-    case 'LOGOUT':
-      return { 
-        user: null, 
-        token: null, 
-        isAuthenticated: false, 
-        isLoading: false 
-      };
-    case 'SET_ERROR':
-      return { ...state, error: action.payload, isLoading: false };
-    default:
-      return state;
+// Create axios instance with base configuration
+const api = axios.create({
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor to add auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-};
+);
 
-// Initial state
-const initialState = {
-  user: null,
-  token: localStorage.getItem('authToken'),
-  isAuthenticated: false,
-  isLoading: true,
-  error: null,
-};
+// Response interceptor to handle token expiration
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
-// Auth provider component
 export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Load user on mount if token exists
+  // Check for existing token on app load
   useEffect(() => {
-    const loadUser = async () => {
-      const token = localStorage.getItem('authToken');
-      if (token) {
+    const initializeAuth = async () => {
+      const token = localStorage.getItem('auth_token');
+      const storedUser = localStorage.getItem('user');
+
+      if (token && storedUser) {
         try {
-          const response = await authAPI.getMe();
-          dispatch({ type: 'SET_USER', payload: response.data });
-          dispatch({ type: 'SET_TOKEN', payload: token });
+          // Verify token is still valid
+          const response = await api.get('/auth/me');
+          setUser(response.data);
         } catch (error) {
-          localStorage.removeItem('authToken');
-          dispatch({ type: 'LOGOUT' });
+          // Token is invalid
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('user');
         }
-      } else {
-        dispatch({ type: 'SET_LOADING', payload: false });
       }
+      setLoading(false);
     };
 
-    loadUser();
+    initializeAuth();
   }, []);
-
-  // Login function
-  const login = async (credentials) => {
-    try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'SET_ERROR', payload: null });
-
-      const response = await authAPI.login(credentials);
-      const { access_token } = response.data;
-
-      localStorage.setItem('authToken', access_token);
-      dispatch({ type: 'SET_TOKEN', payload: access_token });
-
-      // Get user data
-      const userResponse = await authAPI.getMe();
-      dispatch({ type: 'SET_USER', payload: userResponse.data });
-
-      toast.success('Successfully logged in!');
-      return { success: true };
-    } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Login failed. Please try again.';
-      dispatch({ type: 'SET_ERROR', payload: errorMessage });
-      toast.error(errorMessage);
-      return { success: false, error: errorMessage };
-    }
-  };
 
   // Register function
   const register = async (userData) => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'SET_ERROR', payload: null });
-
-      await authAPI.register(userData);
+      setLoading(true);
       
-      // Auto-login after registration
-      const loginResult = await login({
-        username: userData.email,
-        password: userData.password,
+      const response = await api.post('/auth/register', userData);
+      
+      if (response.data) {
+        toast.success('Account created successfully! 🎉');
+        
+        // Auto-login after registration
+        await login({
+          email: userData.email,
+          password: userData.password
+        });
+        
+        return { success: true, data: response.data };
+      }
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Registration failed';
+      toast.error(message);
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Login function
+  const login = async (credentials) => {
+    try {
+      setLoading(true);
+      
+      // FastAPI expects form data for OAuth2PasswordRequestForm
+      const formData = new FormData();
+      formData.append('username', credentials.email);
+      formData.append('password', credentials.password);
+
+      const response = await axios.post('/api/auth/login', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
       });
 
-      if (loginResult.success) {
-        toast.success('Account created successfully!');
+      if (response.data.access_token) {
+        // Store token
+        localStorage.setItem('auth_token', response.data.access_token);
+        
+        // Get user info
+        const userResponse = await api.get('/auth/me');
+        setUser(userResponse.data);
+        localStorage.setItem('user', JSON.stringify(userResponse.data));
+        
+        toast.success('Welcome back! 👋');
+        return { success: true, data: userResponse.data };
       }
-
-      return loginResult;
     } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Registration failed. Please try again.';
-      dispatch({ type: 'SET_ERROR', payload: errorMessage });
-      toast.error(errorMessage);
-      return { success: false, error: errorMessage };
+      const message = error.response?.data?.detail || 'Login failed';
+      toast.error(message);
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
     }
   };
 
   // Logout function
   const logout = () => {
-    localStorage.removeItem('authToken');
-    dispatch({ type: 'LOGOUT' });
-    toast.success('Successfully logged out!');
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
+    setUser(null);
+    toast.success('Logged out successfully! 👋');
   };
 
-  // Update user function
-  const updateUser = (userData) => {
-    dispatch({ type: 'SET_USER', payload: userData });
-  };
-
-  // Refresh token function
-  const refreshToken = async () => {
+  // Update user profile
+  const updateUser = async (userData) => {
     try {
-      const response = await authAPI.refreshToken();
-      const { access_token } = response.data;
-      localStorage.setItem('authToken', access_token);
-      dispatch({ type: 'SET_TOKEN', payload: access_token });
-      return true;
+      const response = await api.put('/users/profile', userData);
+      setUser(response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      toast.success('Profile updated successfully! ✅');
+      return { success: true, data: response.data };
     } catch (error) {
-      logout();
-      return false;
+      const message = error.response?.data?.detail || 'Update failed';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  // Change password
+  const changePassword = async (passwordData) => {
+    try {
+      await api.post('/auth/change-password', passwordData);
+      toast.success('Password changed successfully! 🔒');
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Password change failed';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  // Forgot password
+  const forgotPassword = async (email) => {
+    try {
+      await api.post('/auth/forgot-password', { email });
+      toast.success('Password reset link sent to your email! 📧');
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Reset request failed';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  // Reset password
+  const resetPassword = async (resetData) => {
+    try {
+      await api.post('/auth/reset-password', resetData);
+      toast.success('Password reset successfully! 🔒');
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Password reset failed';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  // Verify email
+  const verifyEmail = async (token) => {
+    try {
+      await api.post('/auth/verify-email', { token });
+      toast.success('Email verified successfully! ✅');
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Email verification failed';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  // Resend verification email
+  const resendVerification = async () => {
+    try {
+      await api.post('/auth/resend-verification');
+      toast.success('Verification email sent! 📧');
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Failed to send verification';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  // Get security info
+  const getSecurityInfo = async () => {
+    try {
+      const response = await api.get('/auth/security');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return { success: false, error: error.response?.data?.detail };
+    }
+  };
+
+  // Get active sessions
+  const getActiveSessions = async () => {
+    try {
+      const response = await api.get('/auth/sessions');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return { success: false, error: error.response?.data?.detail };
+    }
+  };
+
+  // Revoke session
+  const revokeSession = async (sessionId) => {
+    try {
+      await api.delete(`/auth/sessions/${sessionId}`);
+      toast.success('Session revoked successfully! 🔒');
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Failed to revoke session';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  // Revoke all sessions
+  const revokeAllSessions = async () => {
+    try {
+      await api.delete('/auth/sessions/all');
+      toast.success('All sessions revoked successfully! 🔒');
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Failed to revoke sessions';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  // Check password strength
+  const checkPasswordStrength = async (password) => {
+    try {
+      const response = await axios.get(`/api/auth/password-strength?password=${encodeURIComponent(password)}`);
+      return { success: true, data: response.data };
+    } catch (error) {
+      return { success: false, error: error.response?.data?.detail };
     }
   };
 
   const value = {
-    ...state,
+    user,
+    loading,
     login,
     register,
     logout,
     updateUser,
-    refreshToken,
+    changePassword,
+    forgotPassword,
+    resetPassword,
+    verifyEmail,
+    resendVerification,
+    getSecurityInfo,
+    getActiveSessions,
+    revokeSession,
+    revokeAllSessions,
+    checkPasswordStrength,
+    api, // Expose api instance for other components
   };
 
   return (
@@ -162,11 +302,12 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}; 
+};
+
+export default AuthContext; 
