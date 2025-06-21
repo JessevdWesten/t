@@ -2,19 +2,48 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
+import logging
+import time
+from sqlalchemy.exc import OperationalError
 
 from config import settings
 from routers import auth, users, exercises, recipes, plans
 from database import engine, Base
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Smart Fitness & Nutrition Coach API",
     description="API for personalized fitness and nutrition planning",
     version="1.0.0",
 )
+
+def create_tables_with_retry(max_retries=5, delay=5):
+    """Create database tables with retry logic."""
+    for attempt in range(max_retries):
+        try:
+            logger.info(f"Attempting to create database tables (attempt {attempt + 1}/{max_retries})")
+            Base.metadata.create_all(bind=engine)
+            logger.info("Database tables created successfully")
+            return True
+        except OperationalError as e:
+            logger.warning(f"Database connection failed on attempt {attempt + 1}: {e}")
+            if attempt < max_retries - 1:
+                logger.info(f"Retrying in {delay} seconds...")
+                time.sleep(delay)
+            else:
+                logger.error("Failed to connect to database after all attempts")
+                raise
+    return False
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database on startup."""
+    logger.info("Starting application...")
+    create_tables_with_retry()
+    logger.info("Application startup completed")
 
 # Configure CORS with deployment-friendly settings
 allowed_origins = [
@@ -51,7 +80,15 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "database": "connected"}
+    """Health check endpoint that also tests database connectivity."""
+    try:
+        # Test database connection
+        with engine.connect() as conn:
+            conn.execute("SELECT 1")
+        return {"status": "healthy", "database": "connected"}
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
 
 if __name__ == "__main__":
     import uvicorn

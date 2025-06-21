@@ -20,5 +20,5 @@ ENV PORT=8000
 # Expose the port
 EXPOSE $PORT
 
-# Create tables and start the server
-CMD python -c "from database import Base, engine; Base.metadata.create_all(bind=engine)" && uvicorn main:app --host 0.0.0.0 --port $PORT 
+# Start the server (database initialization happens in FastAPI startup event)
+CMD uvicorn main:app --host 0.0.0.0 --port $PORT 
