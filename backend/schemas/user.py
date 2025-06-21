@@ -1,13 +1,10 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, List
+from typing import Optional, Dict, Any
 from datetime import datetime
-from models.user import GenderEnum, ActivityLevelEnum, GoalEnum, WorkoutTypeEnum
 
 # Base User Schema
 class UserBase(BaseModel):
     email: EmailStr
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
 
 # User Creation Schema
 class UserCreate(UserBase):
@@ -18,53 +15,36 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
-# User Profile Update Schema
-class UserProfileUpdate(BaseModel):
+# User Profile Create/Update Schema
+class UserProfileBase(BaseModel):
     first_name: Optional[str] = None
-    last_name: Optional[str] = None
     age: Optional[int] = Field(None, ge=13, le=120)
-    gender: Optional[GenderEnum] = None
-    height_cm: Optional[float] = Field(None, gt=0, le=300)
+    gender: Optional[str] = None  # 'male', 'female', 'other'
+    height_cm: Optional[int] = Field(None, gt=0, le=300)
     weight_kg: Optional[float] = Field(None, gt=0, le=1000)
-    activity_level: Optional[ActivityLevelEnum] = None
-    goal: Optional[GoalEnum] = None
-    target_weight_kg: Optional[float] = Field(None, gt=0, le=1000)
+    activity_level: Optional[str] = None  # 'sedentary', 'light', 'moderate', 'active', 'very_active'
+    goal: Optional[str] = None  # 'weight_loss', 'maintenance', 'muscle_gain'
+    preferences: Optional[Dict[str, Any]] = None  # {'diet': 'vegetarian', 'allergies': ['nuts'], 'equipment': ['dumbbells']}
+
+class UserProfileCreate(UserProfileBase):
+    pass
+
+class UserProfileUpdate(UserProfileBase):
+    pass
+
+# User Profile Response Schema
+class UserProfileResponse(UserProfileBase):
+    user_id: int
+    updated_at: datetime
     
-    # Dietary Preferences
-    is_vegetarian: Optional[bool] = None
-    is_vegan: Optional[bool] = None
-    is_paleo: Optional[bool] = None
-    is_keto: Optional[bool] = None
-    is_gluten_free: Optional[bool] = None
-    allergies: Optional[str] = None
-    
-    # Fitness Preferences
-    preferred_workout_types: Optional[List[WorkoutTypeEnum]] = None
-    available_equipment: Optional[List[str]] = None
-    workout_days_per_week: Optional[int] = Field(None, ge=1, le=7)
-    workout_duration_minutes: Optional[int] = Field(None, ge=10, le=300)
+    class Config:
+        orm_mode = True
 
 # User Response Schema
 class UserResponse(UserBase):
     id: int
     created_at: datetime
-    is_active: bool
-    
-    # Profile Information
-    age: Optional[int] = None
-    gender: Optional[GenderEnum] = None
-    height_cm: Optional[float] = None
-    weight_kg: Optional[float] = None
-    
-    # Lifestyle & Goals
-    activity_level: Optional[ActivityLevelEnum] = None
-    goal: Optional[GoalEnum] = None
-    target_weight_kg: Optional[float] = None
-    
-    # Calculated Values
-    bmr: Optional[float] = None
-    tdee: Optional[float] = None
-    target_calories: Optional[float] = None
+    profile: Optional[UserProfileResponse] = None
     
     class Config:
         orm_mode = True

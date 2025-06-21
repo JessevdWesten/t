@@ -1,6 +1,7 @@
 from .user import (
-    UserBase, UserCreate, UserLogin, UserProfileUpdate, UserResponse,
-    Token, TokenData
+    UserBase, UserCreate, UserLogin, 
+    UserProfileBase, UserProfileCreate, UserProfileUpdate, UserProfileResponse,
+    UserResponse, Token, TokenData
 )
 from .exercise import (
     ExerciseBase, ExerciseCreate, ExerciseUpdate, ExerciseResponse,
@@ -11,14 +12,16 @@ from .recipe import (
     RecipeFilter
 )
 from .plan import (
-    PlanBase, PlanCreate, PlanUpdate, PlanResponse,
+    GeneratedPlanBase, GeneratedPlanCreate, GeneratedPlanUpdate, GeneratedPlanResponse,
+    UserFeedbackLogBase, UserFeedbackLogCreate, UserFeedbackLogResponse,
     PlanGenerationRequest
 )
 
 __all__ = [
     # User schemas
-    "UserBase", "UserCreate", "UserLogin", "UserProfileUpdate", "UserResponse",
-    "Token", "TokenData",
+    "UserBase", "UserCreate", "UserLogin",
+    "UserProfileBase", "UserProfileCreate", "UserProfileUpdate", "UserProfileResponse", 
+    "UserResponse", "Token", "TokenData",
     
     # Exercise schemas
     "ExerciseBase", "ExerciseCreate", "ExerciseUpdate", "ExerciseResponse",
@@ -29,6 +32,7 @@ __all__ = [
     "RecipeFilter",
     
     # Plan schemas
-    "PlanBase", "PlanCreate", "PlanUpdate", "PlanResponse",
+    "GeneratedPlanBase", "GeneratedPlanCreate", "GeneratedPlanUpdate", "GeneratedPlanResponse",
+    "UserFeedbackLogBase", "UserFeedbackLogCreate", "UserFeedbackLogResponse",
     "PlanGenerationRequest"
 ] 
