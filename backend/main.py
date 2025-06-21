@@ -537,23 +537,50 @@ except ImportError as e:
 # Custom documentation endpoints with enhanced styling
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
-    return get_swagger_ui_html(
-        openapi_url=app.openapi_url,
-        title=f"{app.title} - Interactive API Documentation",
-        oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
-        swagger_js_url="https://unpkg.com/swagger-ui-dist@5.10.5/swagger-ui-bundle.js",
-        swagger_css_url="https://unpkg.com/swagger-ui-dist@5.10.5/swagger-ui.css",
-        swagger_ui_parameters={
-            "syntaxHighlight.theme": "arta",
-            "tryItOutEnabled": True,
-            "displayRequestDuration": True,
-            "filter": True,
-            "showExtensions": True,
-            "showCommonExtensions": True,
-            "deepLinking": True,
-        },
-        custom_css=custom_css,
-    )
+    """Enhanced Swagger UI with custom styling"""
+    from fastapi.responses import HTMLResponse
+    
+    # Create custom HTML with embedded CSS
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>{app.title} - Interactive API Documentation</title>
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.10.5/swagger-ui.css" />
+        {custom_css}
+    </head>
+    <body>
+        <div id="swagger-ui"></div>
+        <script src="https://unpkg.com/swagger-ui-dist@5.10.5/swagger-ui-bundle.js"></script>
+        <script>
+            SwaggerUIBundle({{
+                url: '{app.openapi_url}',
+                dom_id: '#swagger-ui',
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIBundle.presets.standalone
+                ],
+                plugins: [
+                    SwaggerUIBundle.plugins.DownloadUrl
+                ],
+                layout: "StandaloneLayout",
+                syntaxHighlight: {{
+                    theme: "arta"
+                }},
+                tryItOutEnabled: true,
+                displayRequestDuration: true,
+                filter: true,
+                showExtensions: true,
+                showCommonExtensions: true,
+                deepLinking: true,
+                oauth2RedirectUrl: '{app.swagger_ui_oauth2_redirect_url}'
+            }});
+        </script>
+    </body>
+    </html>
+    """
+    
+    return HTMLResponse(content=html_content)
 
 @app.get("/redoc", include_in_schema=False)
 async def redoc_html():
