@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, Enum
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
+from datetime import datetime
 import enum
-from ..database import Base
+from database import Base
 
 class GenderEnum(enum.Enum):
     MALE = "male"

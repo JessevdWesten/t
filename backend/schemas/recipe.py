@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
-from ..models.recipe import MealTypeEnum, CuisineEnum, DifficultyEnum
+from models.recipe import MealTypeEnum, CuisineEnum, DifficultyEnum
 
 class RecipeBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=200)

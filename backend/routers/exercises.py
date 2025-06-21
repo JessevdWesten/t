@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from ..database import get_db
-from ..models.exercise import Exercise
-from ..schemas.exercise import ExerciseCreate, ExerciseUpdate, ExerciseResponse, ExerciseFilter
-from ..auth import get_current_active_user
-from ..services.exercise_service import ExerciseService
+from database import get_db
+from models.exercise import Exercise
+from schemas.exercise import ExerciseCreate, ExerciseUpdate, ExerciseResponse, ExerciseFilter
+from auth import get_current_active_user
+from services.exercise_service import ExerciseService
 
 router = APIRouter()
 

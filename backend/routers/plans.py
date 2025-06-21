@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from ..database import get_db
-from ..models.plan import Plan
-from ..models.user import User
-from ..schemas.plan import PlanCreate, PlanUpdate, PlanResponse, PlanGenerationRequest
-from ..auth import get_current_active_user
-from ..services.plan_service import PlanService
+from database import get_db
+from models.plan import Plan
+from models.user import User
+from schemas.plan import PlanCreate, PlanUpdate, PlanResponse, PlanGenerationRequest
+from auth import get_current_active_user
+from services.plan_service import PlanService
 
 router = APIRouter()
 

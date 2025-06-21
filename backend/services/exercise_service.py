@@ -1,10 +1,11 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, and_
+from sqlalchemy import and_, or_
 from typing import List, Optional
 import json
+from datetime import datetime, timedelta
 
-from ..models.exercise import Exercise
-from ..schemas.exercise import ExerciseCreate, ExerciseUpdate, ExerciseFilter
+from models.exercise import Exercise
+from schemas.exercise import ExerciseCreate, ExerciseUpdate, ExerciseFilter
 
 class ExerciseService:
     def __init__(self, db: Session):

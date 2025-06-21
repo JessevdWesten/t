@@ -2,7 +2,8 @@ from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, 
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 import enum
-from ..database import Base
+from datetime import datetime
+from database import Base
 
 class PlanTypeEnum(enum.Enum):
     WORKOUT = "workout"

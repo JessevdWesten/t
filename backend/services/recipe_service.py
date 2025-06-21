@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, and_
+from sqlalchemy import and_, or_
 from typing import List, Optional
 import json
 
-from ..models.recipe import Recipe, MealTypeEnum
-from ..schemas.recipe import RecipeCreate, RecipeUpdate, RecipeFilter
+from models.recipe import Recipe, MealTypeEnum
+from schemas.recipe import RecipeCreate, RecipeUpdate, RecipeFilter
 
 class RecipeService:
     def __init__(self, db: Session):

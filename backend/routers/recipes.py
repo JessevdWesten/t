@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from ..database import get_db
-from ..models.recipe import Recipe
-from ..schemas.recipe import RecipeCreate, RecipeUpdate, RecipeResponse, RecipeFilter
-from ..auth import get_current_active_user
-from ..services.recipe_service import RecipeService
+from database import get_db
+from models.recipe import Recipe
+from schemas.recipe import RecipeCreate, RecipeUpdate, RecipeResponse, RecipeFilter
+from auth import get_current_active_user
+from services.recipe_service import RecipeService
 
 router = APIRouter()
 

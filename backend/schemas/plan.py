@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
+from typing import Optional, List, Dict, Any
 from datetime import datetime
-from ..models.plan import PlanTypeEnum, PlanStatusEnum
+from models.plan import PlanTypeEnum, PlanStatusEnum
 
 class PlanBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=200)

@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import Optional, Dict, Any
+from datetime import date
 import json
 
-from ..models.user import User, ActivityLevelEnum, GoalEnum, GenderEnum
-from ..schemas.user import UserProfileUpdate
+from models.user import User, ActivityLevelEnum, GoalEnum, GenderEnum
+from schemas.user import UserProfileUpdate
 
 class UserService:
     def __init__(self, db: Session):

@@ -4,12 +4,12 @@ from datetime import datetime, timedelta
 import json
 import random
 
-from ..models.plan import Plan, PlanTypeEnum, PlanStatusEnum
-from ..models.user import User, GoalEnum
-from ..schemas.plan import PlanCreate, PlanUpdate, PlanGenerationRequest
-from .exercise_service import ExerciseService
-from .recipe_service import RecipeService
-from .user_service import UserService
+from models.plan import Plan, PlanTypeEnum, PlanStatusEnum
+from models.user import User, GoalEnum
+from schemas.plan import PlanCreate, PlanUpdate, PlanGenerationRequest
+from services.exercise_service import ExerciseService
+from services.recipe_service import RecipeService
+from services.user_service import UserService
 
 class PlanService:
     def __init__(self, db: Session):

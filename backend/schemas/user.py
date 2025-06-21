@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 from datetime import datetime
-from ..models.user import GenderEnum, ActivityLevelEnum, GoalEnum, WorkoutTypeEnum
+from models.user import GenderEnum, ActivityLevelEnum, GoalEnum, WorkoutTypeEnum
 
 # Base User Schema
 class UserBase(BaseModel):
