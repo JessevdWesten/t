@@ -129,7 +129,7 @@ class RecipeResponse(RecipeBase):
     is_active: bool
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class RecipeFilter(BaseModel):
     meal_type: Optional[MealTypeEnum] = None
