@@ -2,6 +2,38 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 from datetime import datetime, date
 
+# Plan Schemas (for the new Plan model)
+class PlanBase(BaseModel):
+    name: str = Field(..., min_length=1, max_length=255)
+    description: Optional[str] = None
+    plan_type: str  # 'workout', 'meal'
+    duration_weeks: Optional[int] = Field(None, ge=1, le=52)
+    start_date: Optional[date] = None
+    plan_data: Optional[Dict[str, Any]] = None
+
+class PlanCreate(PlanBase):
+    pass
+
+class PlanUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=255)
+    description: Optional[str] = None
+    plan_type: Optional[str] = None
+    status: Optional[str] = None
+    duration_weeks: Optional[int] = Field(None, ge=1, le=52)
+    start_date: Optional[date] = None
+    plan_data: Optional[Dict[str, Any]] = None
+
+class PlanResponse(PlanBase):
+    id: int
+    user_id: int
+    status: str
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
 
 
 class GeneratedPlanBase(BaseModel):
