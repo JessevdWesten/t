@@ -55,33 +55,62 @@ const RegisterPage = () => {
   }, [watchPassword]);
 
   const onSubmit = async (data) => {
-    if (data.password !== data.confirmPassword) {
-      setError('confirmPassword', {
-        type: 'manual',
-        message: 'Passwords do not match'
-      });
-      return;
-    }
-
-    setIsLoading(true);
+    console.log('🔧 RegisterPage: Form submitted with data:', data);
     
-    const result = await registerUser({
-      email: data.email,
-      password: data.password,
-      full_name: data.fullName
-    });
+    // Prevent default form submission
+    event?.preventDefault();
+    
+    try {
+      // Validate password match
+      if (data.password !== data.confirmPassword) {
+        console.log('❌ RegisterPage: Passwords do not match');
+        setError('confirmPassword', {
+          type: 'manual',
+          message: 'Passwords do not match'
+        });
+        return;
+      }
 
-    if (result.success) {
-      // Redirect to dashboard using hash routing
-      window.location.hash = '#dashboard';
-    } else {
+      console.log('🔧 RegisterPage: Starting registration process...');
+      setIsLoading(true);
+      
+      const registrationData = {
+        email: data.email,
+        password: data.password,
+        full_name: data.fullName
+      };
+      
+      console.log('🔧 RegisterPage: Calling registerUser with:', registrationData);
+      const result = await registerUser(registrationData);
+      console.log('🔧 RegisterPage: Registration result:', result);
+
+      if (result.success) {
+        console.log('✅ RegisterPage: Registration successful, redirecting to dashboard');
+        // Redirect to dashboard using hash routing
+        window.location.hash = '#dashboard';
+      } else {
+        console.log('❌ RegisterPage: Registration failed:', result.error);
+        setError('email', {
+          type: 'manual',
+          message: result.error || 'Registration failed. Please try again.'
+        });
+      }
+    } catch (error) {
+      console.error('❌ RegisterPage: Unexpected error during registration:', error);
       setError('email', {
         type: 'manual',
-        message: result.error
+        message: 'An unexpected error occurred. Please try again.'
       });
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
+  };
+
+  // Handle form submission with additional debugging
+  const handleFormSubmit = (e) => {
+    console.log('🔧 RegisterPage: Form submit event triggered');
+    e.preventDefault();
+    handleSubmit(onSubmit)(e);
   };
 
   const containerVariants = {
@@ -174,7 +203,7 @@ const RegisterPage = () => {
               <span>or create account with email</span>
             </motion.div>
 
-            <motion.form onSubmit={handleSubmit(onSubmit)} variants={itemVariants}>
+            <motion.form onSubmit={handleFormSubmit} variants={itemVariants}>
               {/* Full Name Field */}
               <div className="form-group">
                 <label htmlFor="fullName">Full Name</label>
@@ -328,6 +357,10 @@ const RegisterPage = () => {
                 disabled={isLoading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={(e) => {
+                  console.log('🔧 RegisterPage: Submit button clicked');
+                  // Let the form handle the submission
+                }}
               >
                 {isLoading ? (
                   <div className="loading-spinner"></div>
@@ -357,25 +390,6 @@ const RegisterPage = () => {
                   }}
                 >
                   Sign in here
-                </button>
-              </p>
-              
-              {/* Debug Link */}
-              <p style={{ marginTop: '1rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>
-                Having registration issues?{' '}
-                <button 
-                  onClick={() => window.location.hash = '#test-registration'}
-                  style={{ 
-                    background: 'none', 
-                    border: 'none', 
-                    color: '#f59e0b', 
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                    font: 'inherit',
-                    fontSize: '0.9rem'
-                  }}
-                >
-                  🧪 Test Registration
                 </button>
               </p>
               
