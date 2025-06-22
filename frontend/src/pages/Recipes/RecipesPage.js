@@ -11,7 +11,7 @@ import {
   FiHeart,
   FiStar,
   FiHome,
-  FiChef
+  FiEye
 } from 'react-icons/fi';
 
 const RecipesPage = () => {
@@ -493,7 +493,7 @@ const RecipesPage = () => {
                   justifyContent: 'center',
                   gap: '0.5rem'
                 }}>
-                  <FiChef /> View Recipe
+                  <FiEye /> View Recipe
                 </button>
               </motion.div>
             ))}
