@@ -2,7 +2,7 @@
   "name": "fitgenius-frontend",
   "version": "2.0.0",
   "description": "FitGenius - Your Ultimate AI-Powered Fitness & Nutrition Platform",
-  "homepage": "https://jessevdwesten.github.io/t",
+  "homepage": "https://courageous-paletas-373f9e.netlify.app",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
