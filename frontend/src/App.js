@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
@@ -29,74 +28,146 @@ const queryClient = new QueryClient({
 
 // Simple Dashboard Component
 const Dashboard = () => (
-  <div style={{ padding: '2rem', textAlign: 'center' }}>
-    <h1>Dashboard</h1>
-    <p>Welcome to FitGenius!</p>
-    <a href="/" style={{ color: '#3b82f6', textDecoration: 'underline' }}>
-      ← Back to Home
-    </a>
+  <div style={{ 
+    padding: '2rem', 
+    textAlign: 'center',
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    color: 'white'
+  }}>
+    <h1>🎉 Dashboard Working!</h1>
+    <p>Welcome to FitGenius - No more React Router errors!</p>
+    <div style={{ marginTop: '2rem' }}>
+      <button 
+        onClick={() => window.location.hash = ''}
+        style={{ 
+          background: 'rgba(255,255,255,0.2)', 
+          color: 'white', 
+          padding: '1rem 2rem', 
+          border: 'none', 
+          borderRadius: '0.5rem',
+          cursor: 'pointer',
+          marginRight: '1rem',
+          backdropFilter: 'blur(10px)'
+        }}
+      >
+        ← Home
+      </button>
+      <button 
+        onClick={() => window.location.hash = '#login'}
+        style={{ 
+          background: 'rgba(255,255,255,0.2)', 
+          color: 'white', 
+          padding: '1rem 2rem', 
+          border: 'none', 
+          borderRadius: '0.5rem',
+          cursor: 'pointer',
+          backdropFilter: 'blur(10px)'
+        }}
+      >
+        Login Page
+      </button>
+    </div>
   </div>
 );
 
 // 404 Component
 const NotFound = () => (
-  <div style={{ padding: '2rem', textAlign: 'center' }}>
-    <h1>Page Not Found</h1>
+  <div style={{ 
+    padding: '2rem', 
+    textAlign: 'center',
+    minHeight: '100vh',
+    background: '#1e293b',
+    color: 'white'
+  }}>
+    <h1>🔍 Page Not Found</h1>
     <p>The page you're looking for doesn't exist.</p>
-    <a href="/" style={{ color: '#3b82f6', textDecoration: 'underline' }}>
+    <button 
+      onClick={() => window.location.hash = ''}
+      style={{ 
+        background: '#3b82f6', 
+        color: 'white', 
+        padding: '1rem 2rem', 
+        border: 'none', 
+        borderRadius: '0.5rem',
+        cursor: 'pointer',
+        marginTop: '1rem'
+      }}
+    >
       ← Go Home
-    </a>
+    </button>
   </div>
 );
+
+// Simple Router Component
+const SimpleRouter = () => {
+  const [currentHash, setCurrentHash] = useState(window.location.hash);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Route mapping
+  const routes = {
+    '': <LandingPage />,
+    '#': <LandingPage />,
+    '#/': <LandingPage />,
+    '#login': <LoginPage />,
+    '#/login': <LoginPage />,
+    '#register': <RegisterPage />,
+    '#/register': <RegisterPage />,
+    '#dashboard': <Dashboard />,
+    '#/dashboard': <Dashboard />,
+  };
+
+  return routes[currentHash] || <NotFound />;
+};
 
 // Main App Component
 function App() {
   console.log('🔧 App: Component starting to render...');
   
   try {
-    console.log('🔧 App: About to return JSX...');
+    console.log('🔧 App: About to return JSX (no React Router!)...');
     return (
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider>
             <AuthProvider>
-              <BrowserRouter>
-                <div className="App">
-                  <Routes>
-                    <Route path="/" element={<LandingPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                  
-                  {/* Global Components */}
-                  <Toaster 
-                    position="top-right"
-                    toastOptions={{
-                      duration: 4000,
-                      style: {
-                        background: '#1e293b',
-                        color: '#f8fafc',
-                        border: '1px solid #475569',
-                        borderRadius: '12px',
+              <div className="App">
+                <SimpleRouter />
+                
+                {/* Global Components */}
+                <Toaster 
+                  position="top-right"
+                  toastOptions={{
+                    duration: 4000,
+                    style: {
+                      background: '#1e293b',
+                      color: '#f8fafc',
+                      border: '1px solid #475569',
+                      borderRadius: '12px',
+                    },
+                    success: {
+                      iconTheme: {
+                        primary: '#10b981',
+                        secondary: '#f8fafc',
                       },
-                      success: {
-                        iconTheme: {
-                          primary: '#10b981',
-                          secondary: '#f8fafc',
-                        },
+                    },
+                    error: {
+                      iconTheme: {
+                        primary: '#ef4444',
+                        secondary: '#f8fafc',
                       },
-                      error: {
-                        iconTheme: {
-                          primary: '#ef4444',
-                          secondary: '#f8fafc',
-                        },
-                      },
-                    }}
-                  />
-                </div>
-              </BrowserRouter>
+                    },
+                  }}
+                />
+              </div>
             </AuthProvider>
           </ThemeProvider>
         </QueryClientProvider>
