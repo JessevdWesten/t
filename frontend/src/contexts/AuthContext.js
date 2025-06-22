@@ -6,7 +6,7 @@ const AuthContext = createContext();
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: process.env.REACT_APP_API_URL || 'https://fitnesstracker-backend-docker.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }) => {
       formData.append('username', credentials.email);
       formData.append('password', credentials.password);
 
-      const response = await axios.post('/api/auth/login', formData, {
+      const response = await api.post('/auth/login', formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -268,7 +268,7 @@ export const AuthProvider = ({ children }) => {
   // Check password strength
   const checkPasswordStrength = async (password) => {
     try {
-      const response = await axios.get(`/api/auth/password-strength?password=${encodeURIComponent(password)}`);
+      const response = await api.get(`/auth/password-strength?password=${encodeURIComponent(password)}`);
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, error: error.response?.data?.detail };
