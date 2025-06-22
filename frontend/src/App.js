@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -28,34 +28,49 @@ const queryClient = new QueryClient({
   },
 });
 
-// Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-  
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+// Simple Dashboard Component
+const SimpleDashboard = () => {
+  const { user } = useAuth();
   
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <h1>Please log in to access dashboard</h1>
+        <a href="#/login" style={{ color: '#3b82f6', textDecoration: 'underline' }}>
+          Go to Login
+        </a>
+      </div>
+    );
   }
   
-  return children;
-};
-
-// Public Route Component (redirect if already logged in)
-const PublicRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-  
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-  
-  if (user) {
-    return <Navigate to="/" replace />;
-  }
-  
-  return children;
+  return (
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h1>Dashboard Coming Soon</h1>
+      <p>Welcome to FitGenius, {user.email || user.username}!</p>
+      <div style={{ marginTop: '1rem' }}>
+        <a href="#/" style={{ color: '#3b82f6', textDecoration: 'underline', marginRight: '1rem' }}>
+          Home
+        </a>
+        <button 
+          onClick={() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.reload();
+          }}
+          style={{ 
+            background: '#ef4444', 
+            color: 'white', 
+            padding: '0.5rem 1rem', 
+            border: 'none', 
+            borderRadius: '0.5rem',
+            cursor: 'pointer'
+          }}
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  );
 };
 
 // Main App Component
@@ -74,38 +89,9 @@ function App() {
                   <Routes>
                     {/* Public Routes */}
                     <Route path="/" element={<LandingPage />} />
-                    <Route 
-                      path="/login" 
-                      element={
-                        <PublicRoute>
-                          <LoginPage />
-                        </PublicRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/register" 
-                      element={
-                        <PublicRoute>
-                          <RegisterPage />
-                        </PublicRoute>
-                      } 
-                    />
-                    
-                    {/* Simple dashboard placeholder */}
-                    <Route 
-                      path="/dashboard" 
-                      element={
-                        <ProtectedRoute>
-                          <div style={{ padding: '2rem', textAlign: 'center' }}>
-                            <h1>Dashboard Coming Soon</h1>
-                            <p>Welcome to FitGenius!</p>
-                          </div>
-                        </ProtectedRoute>
-                      } 
-                    />
-                    
-                    {/* Catch all route */}
-                    <Route path="*" element={<Navigate to="/" replace />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/dashboard" element={<SimpleDashboard />} />
                   </Routes>
                   
                   {/* Global Components */}
