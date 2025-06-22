@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const WorkoutHistoryPage = () => {
   const [workouts, setWorkouts] = useState([]);
@@ -260,4 +260,4 @@ const WorkoutHistoryPage = () => {
   );
 };
 
-export default WorkoutHistoryPage;
+export default WorkoutHistoryPage; 
