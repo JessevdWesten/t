@@ -86,22 +86,43 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setLoading(true);
+      console.log('🔧 Registration: Starting registration with data:', { email: userData.email, full_name: userData.full_name });
       
       const response = await api.post('/auth/register', userData);
+      console.log('🔧 Registration: Backend response:', response.data);
       
       if (response.data) {
         toast.success('Account created successfully! 🎉');
         
         // Auto-login after registration
-        await login({
+        console.log('🔧 Registration: Attempting auto-login...');
+        const loginResult = await login({
           email: userData.email,
           password: userData.password
         });
         
-        return { success: true, data: response.data };
+        if (loginResult.success) {
+          console.log('🔧 Registration: Auto-login successful!');
+          return { success: true, data: response.data };
+        } else {
+          console.log('🔧 Registration: Auto-login failed, but registration succeeded');
+          return { success: true, data: response.data, message: 'Account created! Please log in manually.' };
+        }
       }
     } catch (error) {
-      const message = error.response?.data?.detail || 'Registration failed';
+      console.error('❌ Registration: Error occurred:', error);
+      console.error('❌ Registration: Error response:', error.response?.data);
+      console.error('❌ Registration: Error status:', error.response?.status);
+      
+      let message = 'Registration failed';
+      if (error.response?.data?.detail) {
+        message = error.response.data.detail;
+      } else if (error.response?.data?.message) {
+        message = error.response.data.message;
+      } else if (error.message) {
+        message = error.message;
+      }
+      
       toast.error(message);
       return { success: false, error: message };
     } finally {

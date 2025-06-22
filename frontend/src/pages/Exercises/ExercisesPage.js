@@ -177,6 +177,42 @@ const ExercisesPage = () => {
           </div>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <button 
+              onClick={() => window.location.hash = '#workout-builder'}
+              style={{ 
+                background: 'rgba(16, 185, 129, 0.8)', 
+                color: 'white', 
+                padding: '0.75rem 1.5rem', 
+                border: 'none', 
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                backdropFilter: 'blur(10px)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontWeight: 'bold'
+              }}
+            >
+              🏗️ Build Custom Workout
+            </button>
+            <button 
+              onClick={() => window.location.hash = '#workout-history'}
+              style={{ 
+                background: 'rgba(139, 92, 246, 0.8)', 
+                color: 'white', 
+                padding: '0.75rem 1.5rem', 
+                border: 'none', 
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                backdropFilter: 'blur(10px)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontWeight: 'bold'
+              }}
+            >
+              📈 View History
+            </button>
+            <button 
               onClick={() => window.location.hash = '#dashboard'}
               style={{ 
                 background: 'rgba(255,255,255,0.2)', 
@@ -285,6 +321,7 @@ const ExercisesPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
+                onClick={() => window.location.hash = `#exercise/${exercise.id}`}
                 style={{ 
                   background: 'rgba(255,255,255,0.15)', 
                   padding: '1.5rem', 
@@ -292,9 +329,15 @@ const ExercisesPage = () => {
                   backdropFilter: 'blur(10px)',
                   border: '1px solid rgba(255,255,255,0.2)',
                   cursor: 'pointer',
-                  transition: 'transform 0.2s'
+                  transition: 'transform 0.2s, background 0.2s'
                 }}
                 whileHover={{ scale: 1.02 }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
+                }}
               >
                 <div style={{ 
                   display: 'flex', 
@@ -356,21 +399,34 @@ const ExercisesPage = () => {
                   </div>
                 </div>
                 
-                <button style={{ 
-                  width: '100%',
-                  background: 'rgba(16, 185, 129, 0.8)', 
-                  color: 'white', 
-                  padding: '0.75rem', 
-                  border: 'none', 
-                  borderRadius: '0.5rem',
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem'
-                }}>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card click event
+                    window.location.hash = `#exercise/${exercise.id}`;
+                  }}
+                  style={{ 
+                    width: '100%',
+                    background: 'rgba(16, 185, 129, 0.8)', 
+                    color: 'white', 
+                    padding: '0.75rem', 
+                    border: 'none', 
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.background = 'rgba(16, 185, 129, 1)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.background = 'rgba(16, 185, 129, 0.8)';
+                  }}
+                >
                   <FiPlay /> Start Exercise
                 </button>
               </motion.div>

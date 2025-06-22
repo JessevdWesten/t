@@ -55,14 +55,23 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
     hashed_password = get_password_hash(user_data.password)
     db_user = User(
         email=user_data.email,
-        hashed_password=hashed_password,
-        first_name=user_data.first_name,
-        last_name=user_data.last_name
+        hashed_password=hashed_password
     )
     
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    
+    # Create user profile if full_name is provided
+    if user_data.full_name:
+        from models.user import UserProfile
+        user_profile = UserProfile(
+            user_id=db_user.id,
+            first_name=user_data.full_name
+        )
+        db.add(user_profile)
+        db.commit()
+        db.refresh(user_profile)
     
     return db_user
 

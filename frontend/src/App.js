@@ -8,7 +8,11 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
+import TestRegistration from './pages/Auth/TestRegistration';
 import ExercisesPage from './pages/Exercises/ExercisesPage';
+import ExerciseDetailPage from './pages/Exercises/ExerciseDetailPage';
+import WorkoutBuilderPage from './pages/Exercises/WorkoutBuilderPage';
+import WorkoutHistoryPage from './pages/Exercises/WorkoutHistoryPage';
 import RecipesPage from './pages/Recipes/RecipesPage';
 import AnalyticsPage from './pages/Analytics/AnalyticsPage';
 import ProfilePage from './pages/Profile/ProfilePage';
@@ -396,7 +400,7 @@ const SimpleRouter = () => {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  // Route mapping
+  // Route mapping with exercise detail support
   const routes = {
     '': <LandingPage />,
     '#': <LandingPage />,
@@ -405,10 +409,16 @@ const SimpleRouter = () => {
     '#/login': <LoginPage />,
     '#register': <RegisterPage />,
     '#/register': <RegisterPage />,
+    '#test-registration': <TestRegistration />,
+    '#/test-registration': <TestRegistration />,
     '#dashboard': <Dashboard />,
     '#/dashboard': <Dashboard />,
     '#exercises': <ExercisesPage />,
     '#/exercises': <ExercisesPage />,
+    '#workout-builder': <WorkoutBuilderPage />,
+    '#/workout-builder': <WorkoutBuilderPage />,
+    '#workout-history': <WorkoutHistoryPage />,
+    '#/workout-history': <WorkoutHistoryPage />,
     '#recipes': <RecipesPage />,
     '#/recipes': <RecipesPage />,
     '#analytics': <AnalyticsPage />,
@@ -418,6 +428,11 @@ const SimpleRouter = () => {
     '#social': <SocialPage />,
     '#/social': <SocialPage />,
   };
+
+  // Handle exercise detail routes (e.g., #exercise/1, #exercise/push-ups)
+  if (currentHash.startsWith('#exercise/') || currentHash.startsWith('#/exercise/')) {
+    return <ExerciseDetailPage />;
+  }
 
   return routes[currentHash] || <NotFound />;
 };

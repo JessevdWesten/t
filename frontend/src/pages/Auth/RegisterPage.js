@@ -360,6 +360,44 @@ const RegisterPage = () => {
                 </button>
               </p>
               
+              {/* Debug Link */}
+              <p style={{ marginTop: '1rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>
+                Having registration issues?{' '}
+                <button 
+                  onClick={() => window.location.hash = '#test-registration'}
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    color: '#f59e0b', 
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    font: 'inherit',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  🧪 Test Registration
+                </button>
+              </p>
+              
+              {/* Debug Link */}
+              <p style={{ marginTop: '1rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>
+                Having registration issues?{' '}
+                <button 
+                  onClick={() => window.location.hash = '#test-registration'}
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    color: '#f59e0b', 
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    font: 'inherit',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  🧪 Test Registration
+                </button>
+              </p>
+              
               <div className="help-links">
                 <a href="#help">Need Help?</a>
                 <a href="#privacy">Privacy Policy</a>

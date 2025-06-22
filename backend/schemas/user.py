@@ -9,6 +9,7 @@ class UserBase(BaseModel):
 # User Creation Schema
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
+    full_name: Optional[str] = None
 
 # User Login Schema
 class UserLogin(BaseModel):
