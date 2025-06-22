@@ -57,9 +57,6 @@ const RegisterPage = () => {
   const onSubmit = async (data) => {
     console.log('🔧 RegisterPage: Form submitted with data:', data);
     
-    // Prevent default form submission
-    event?.preventDefault();
-    
     try {
       // Validate password match
       if (data.password !== data.confirmPassword) {
