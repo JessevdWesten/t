@@ -8,6 +8,11 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
+import ExercisesPage from './pages/Exercises/ExercisesPage';
+import RecipesPage from './pages/Recipes/RecipesPage';
+import AnalyticsPage from './pages/Analytics/AnalyticsPage';
+import ProfilePage from './pages/Profile/ProfilePage';
+import SocialPage from './pages/Social/SocialPage';
 
 // Loading and Error Components
 import ErrorBoundary from './components/UI/ErrorBoundary';
@@ -99,6 +104,20 @@ const Dashboard = () => {
               🏠 Home
             </button>
             <button 
+              onClick={() => window.location.hash = '#profile'}
+              style={{ 
+                background: 'rgba(255,255,255,0.2)', 
+                color: 'white', 
+                padding: '0.75rem 1.5rem', 
+                border: 'none', 
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                backdropFilter: 'blur(10px)'
+              }}
+            >
+              👤 Profile
+            </button>
+            <button 
               onClick={logout}
               style={{ 
                 background: 'rgba(239, 68, 68, 0.8)', 
@@ -122,52 +141,108 @@ const Dashboard = () => {
           gap: '1.5rem',
           marginBottom: '3rem'
         }}>
-          <div style={{ 
-            background: 'rgba(255,255,255,0.15)', 
-            padding: '1.5rem', 
-            borderRadius: '1rem',
-            backdropFilter: 'blur(10px)',
-            textAlign: 'center'
-          }}>
+          <div 
+            onClick={() => window.location.hash = '#exercises'}
+            style={{ 
+              background: 'rgba(255,255,255,0.15)', 
+              padding: '1.5rem', 
+              borderRadius: '1rem',
+              backdropFilter: 'blur(10px)',
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, background 0.2s',
+              border: '1px solid rgba(255,255,255,0.2)'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.background = 'rgba(255,255,255,0.25)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.background = 'rgba(255,255,255,0.15)';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💪</div>
             <h3 style={{ margin: '0 0 0.5rem 0' }}>Workouts</h3>
             <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>Ready to start!</p>
           </div>
           
-          <div style={{ 
-            background: 'rgba(255,255,255,0.15)', 
-            padding: '1.5rem', 
-            borderRadius: '1rem',
-            backdropFilter: 'blur(10px)',
-            textAlign: 'center'
-          }}>
+          <div 
+            onClick={() => window.location.hash = '#recipes'}
+            style={{ 
+              background: 'rgba(255,255,255,0.15)', 
+              padding: '1.5rem', 
+              borderRadius: '1rem',
+              backdropFilter: 'blur(10px)',
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, background 0.2s',
+              border: '1px solid rgba(255,255,255,0.2)'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.background = 'rgba(255,255,255,0.25)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.background = 'rgba(255,255,255,0.15)';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🥗</div>
             <h3 style={{ margin: '0 0 0.5rem 0' }}>Nutrition</h3>
             <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>Track your meals</p>
           </div>
           
-          <div style={{ 
-            background: 'rgba(255,255,255,0.15)', 
-            padding: '1.5rem', 
-            borderRadius: '1rem',
-            backdropFilter: 'blur(10px)',
-            textAlign: 'center'
-          }}>
+          <div 
+            onClick={() => window.location.hash = '#analytics'}
+            style={{ 
+              background: 'rgba(255,255,255,0.15)', 
+              padding: '1.5rem', 
+              borderRadius: '1rem',
+              backdropFilter: 'blur(10px)',
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, background 0.2s',
+              border: '1px solid rgba(255,255,255,0.2)'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.background = 'rgba(255,255,255,0.25)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.background = 'rgba(255,255,255,0.15)';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📊</div>
             <h3 style={{ margin: '0 0 0.5rem 0' }}>Progress</h3>
             <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>Monitor growth</p>
           </div>
           
-          <div style={{ 
-            background: 'rgba(255,255,255,0.15)', 
-            padding: '1.5rem', 
-            borderRadius: '1rem',
-            backdropFilter: 'blur(10px)',
-            textAlign: 'center'
-          }}>
+          <div 
+            onClick={() => window.location.hash = '#social'}
+            style={{ 
+              background: 'rgba(255,255,255,0.15)', 
+              padding: '1.5rem', 
+              borderRadius: '1rem',
+              backdropFilter: 'blur(10px)',
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, background 0.2s',
+              border: '1px solid rgba(255,255,255,0.2)'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.background = 'rgba(255,255,255,0.25)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.background = 'rgba(255,255,255,0.15)';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏆</div>
-            <h3 style={{ margin: '0 0 0.5rem 0' }}>Achievements</h3>
-            <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>Unlock rewards</p>
+            <h3 style={{ margin: '0 0 0.5rem 0' }}>Community</h3>
+            <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>Join the fun!</p>
           </div>
         </div>
 
@@ -186,52 +261,77 @@ const Dashboard = () => {
             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
             gap: '1rem'
           }}>
-            <button style={{ 
-              background: 'rgba(16, 185, 129, 0.8)', 
-              color: 'white', 
-              padding: '1rem', 
-              border: 'none', 
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: 'bold'
-            }}>
+            <button 
+              onClick={() => window.location.hash = '#exercises'}
+              style={{ 
+                background: 'rgba(16, 185, 129, 0.8)', 
+                color: 'white', 
+                padding: '1rem', 
+                border: 'none', 
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                transition: 'transform 0.2s',
+                ':hover': { transform: 'scale(1.05)' }
+              }}
+              onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+            >
               🏃‍♂️ Start Workout
             </button>
-            <button style={{ 
-              background: 'rgba(59, 130, 246, 0.8)', 
-              color: 'white', 
-              padding: '1rem', 
-              border: 'none', 
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: 'bold'
-            }}>
-              🍎 Log Meal
+            <button 
+              onClick={() => window.location.hash = '#recipes'}
+              style={{ 
+                background: 'rgba(59, 130, 246, 0.8)', 
+                color: 'white', 
+                padding: '1rem', 
+                border: 'none', 
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                transition: 'transform 0.2s'
+              }}
+              onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+            >
+              🍎 Explore Recipes
             </button>
-            <button style={{ 
-              background: 'rgba(139, 92, 246, 0.8)', 
-              color: 'white', 
-              padding: '1rem', 
-              border: 'none', 
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: 'bold'
-            }}>
+            <button 
+              onClick={() => window.location.hash = '#analytics'}
+              style={{ 
+                background: 'rgba(139, 92, 246, 0.8)', 
+                color: 'white', 
+                padding: '1rem', 
+                border: 'none', 
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                transition: 'transform 0.2s'
+              }}
+              onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+            >
               📈 View Progress
             </button>
-            <button style={{ 
-              background: 'rgba(245, 158, 11, 0.8)', 
-              color: 'white', 
-              padding: '1rem', 
-              border: 'none', 
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: 'bold'
-            }}>
+            <button 
+              onClick={() => window.location.hash = '#social'}
+              style={{ 
+                background: 'rgba(245, 158, 11, 0.8)', 
+                color: 'white', 
+                padding: '1rem', 
+                border: 'none', 
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                transition: 'transform 0.2s'
+              }}
+              onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+            >
               👥 Join Community
             </button>
           </div>
@@ -247,7 +347,7 @@ const Dashboard = () => {
           border: '1px solid rgba(16, 185, 129, 0.3)'
         }}>
           <p style={{ margin: 0, fontSize: '1.1rem' }}>
-            ✅ <strong>APIs Connected Successfully!</strong> Your FitGenius platform is now fully operational.
+            ✅ <strong>All Features Connected!</strong> Your FitGenius platform is now fully operational with exercises, recipes, analytics, and social features.
           </p>
         </div>
       </div>
@@ -307,6 +407,16 @@ const SimpleRouter = () => {
     '#/register': <RegisterPage />,
     '#dashboard': <Dashboard />,
     '#/dashboard': <Dashboard />,
+    '#exercises': <ExercisesPage />,
+    '#/exercises': <ExercisesPage />,
+    '#recipes': <RecipesPage />,
+    '#/recipes': <RecipesPage />,
+    '#analytics': <AnalyticsPage />,
+    '#/analytics': <AnalyticsPage />,
+    '#profile': <ProfilePage />,
+    '#/profile': <ProfilePage />,
+    '#social': <SocialPage />,
+    '#/social': <SocialPage />,
   };
 
   return routes[currentHash] || <NotFound />;
