@@ -51,7 +51,7 @@ const TestRegistration = () => {
     console.log('🧪 Testing direct API call with:', testData);
 
     try {
-      const response = await fetch('https://fitnesstracker-backend-docker.onrender.com/auth/register', {
+      const response = await fetch('https://fitnesstracker-backend-docker.onrender.com/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ const TestRegistration = () => {
         }}>
           <h3>Backend Information</h3>
           <p><strong>Backend URL:</strong> https://fitnesstracker-backend-docker.onrender.com</p>
-          <p><strong>Registration Endpoint:</strong> /auth/register</p>
+          <p><strong>Registration Endpoint:</strong> /api/auth/register</p>
           <p><strong>Expected Data:</strong> {`{ email, password, full_name }`}</p>
           
           <div style={{ marginTop: '1rem' }}>

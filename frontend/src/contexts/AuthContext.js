@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       console.log('🔧 Registration: Starting registration with data:', { email: userData.email, full_name: userData.full_name });
       
-      const response = await api.post('/auth/register', userData);
+      const response = await api.post('/api/auth/register', userData);
       console.log('🔧 Registration: Backend response:', response.data);
       
       if (response.data) {
@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }) => {
       formData.append('username', credentials.email);
       formData.append('password', credentials.password);
 
-      const response = await api.post('/auth/login', formData, {
+      const response = await api.post('/api/auth/login', formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -151,7 +151,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('auth_token', response.data.access_token);
         
         // Get user info
-        const userResponse = await api.get('/auth/me');
+        const userResponse = await api.get('/api/auth/me');
         setUser(userResponse.data);
         localStorage.setItem('user', JSON.stringify(userResponse.data));
         
@@ -193,7 +193,7 @@ export const AuthProvider = ({ children }) => {
   // Change password
   const changePassword = async (passwordData) => {
     try {
-      await api.post('/auth/change-password', passwordData);
+      await api.post('/api/auth/change-password', passwordData);
       toast.success('Password changed successfully! 🔒');
       return { success: true };
     } catch (error) {
@@ -206,7 +206,7 @@ export const AuthProvider = ({ children }) => {
   // Forgot password
   const forgotPassword = async (email) => {
     try {
-      await api.post('/auth/forgot-password', { email });
+      await api.post('/api/auth/forgot-password', { email });
       toast.success('Password reset link sent to your email! 📧');
       return { success: true };
     } catch (error) {
@@ -219,7 +219,7 @@ export const AuthProvider = ({ children }) => {
   // Reset password
   const resetPassword = async (resetData) => {
     try {
-      await api.post('/auth/reset-password', resetData);
+      await api.post('/api/auth/reset-password', resetData);
       toast.success('Password reset successfully! 🔒');
       return { success: true };
     } catch (error) {
@@ -232,7 +232,7 @@ export const AuthProvider = ({ children }) => {
   // Verify email
   const verifyEmail = async (token) => {
     try {
-      await api.post('/auth/verify-email', { token });
+      await api.post('/api/auth/verify-email', { token });
       toast.success('Email verified successfully! ✅');
       return { success: true };
     } catch (error) {
@@ -245,7 +245,7 @@ export const AuthProvider = ({ children }) => {
   // Resend verification email
   const resendVerification = async () => {
     try {
-      await api.post('/auth/resend-verification');
+      await api.post('/api/auth/resend-verification');
       toast.success('Verification email sent! 📧');
       return { success: true };
     } catch (error) {
@@ -258,7 +258,7 @@ export const AuthProvider = ({ children }) => {
   // Get security info
   const getSecurityInfo = async () => {
     try {
-      const response = await api.get('/auth/security');
+      const response = await api.get('/api/auth/security');
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, error: error.response?.data?.detail };
@@ -268,7 +268,7 @@ export const AuthProvider = ({ children }) => {
   // Get active sessions
   const getActiveSessions = async () => {
     try {
-      const response = await api.get('/auth/sessions');
+      const response = await api.get('/api/auth/sessions');
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, error: error.response?.data?.detail };
@@ -278,7 +278,7 @@ export const AuthProvider = ({ children }) => {
   // Revoke session
   const revokeSession = async (sessionId) => {
     try {
-      await api.delete(`/auth/sessions/${sessionId}`);
+      await api.delete(`/api/auth/sessions/${sessionId}`);
       toast.success('Session revoked successfully! 🔒');
       return { success: true };
     } catch (error) {
@@ -291,7 +291,7 @@ export const AuthProvider = ({ children }) => {
   // Revoke all sessions
   const revokeAllSessions = async () => {
     try {
-      await api.delete('/auth/sessions/all');
+      await api.delete('/api/auth/sessions/all');
       toast.success('All sessions revoked successfully! 🔒');
       return { success: true };
     } catch (error) {
@@ -304,7 +304,7 @@ export const AuthProvider = ({ children }) => {
   // Check password strength
   const checkPasswordStrength = async (password) => {
     try {
-      const response = await api.get(`/auth/password-strength?password=${encodeURIComponent(password)}`);
+      const response = await api.get(`/api/auth/password-strength?password=${encodeURIComponent(password)}`);
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, error: error.response?.data?.detail };
