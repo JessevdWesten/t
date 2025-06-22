@@ -99,8 +99,12 @@ const AppLayout = ({ children }) => {
 
 // Main App Component
 function App() {
-  return (
-    <ErrorBoundary>
+  console.log('🔧 App: Component starting to render...');
+  
+  try {
+    console.log('🔧 App: About to return JSX...');
+    return (
+      <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <AuthProvider>
@@ -286,6 +290,10 @@ function App() {
       </QueryClientProvider>
     </ErrorBoundary>
   );
+  } catch (error) {
+    console.error('❌ App: Critical error in App component:', error);
+    return <div>Critical App Error: {error.message}</div>;
+  }
 }
 
 export default App; 

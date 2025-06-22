@@ -41,27 +41,42 @@ api.interceptors.response.use(
 );
 
 export const AuthProvider = ({ children }) => {
+  console.log('🔧 AuthProvider: Component initializing...');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Check for existing token on app load
+  // Check for existing token on app load - SIMPLIFIED FOR DEBUGGING
   useEffect(() => {
+    console.log('🔧 AuthProvider: useEffect starting...');
     const initializeAuth = async () => {
-      const token = localStorage.getItem('auth_token');
-      const storedUser = localStorage.getItem('user');
+      try {
+        console.log('🔧 AuthProvider: Starting auth initialization...');
+        const token = localStorage.getItem('auth_token');
+        const storedUser = localStorage.getItem('user');
+        console.log('🔧 AuthProvider: Found token:', !!token, 'Found stored user:', !!storedUser);
 
-      if (token && storedUser) {
-        try {
-          // Verify token is still valid
-          const response = await api.get('/auth/me');
-          setUser(response.data);
-        } catch (error) {
-          // Token is invalid
-          localStorage.removeItem('auth_token');
-          localStorage.removeItem('user');
+        if (token && storedUser) {
+          try {
+            console.log('🔧 AuthProvider: Parsing stored user data...');
+            // Parse stored user
+            const userData = JSON.parse(storedUser);
+            console.log('🔧 AuthProvider: Parsed user data successfully:', userData);
+            setUser(userData);
+          } catch (parseError) {
+            console.error('❌ AuthProvider: Error parsing stored user:', parseError);
+            // Clear invalid data
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+          }
+        } else {
+          console.log('🔧 AuthProvider: No stored auth data found');
         }
+      } catch (error) {
+        console.error('❌ AuthProvider: Auth initialization error:', error);
+      } finally {
+        console.log('🔧 AuthProvider: Setting loading to false...');
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     initializeAuth();

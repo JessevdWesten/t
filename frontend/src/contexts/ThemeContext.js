@@ -3,24 +3,37 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
+  console.log('🔧 ThemeProvider: Component initializing...');
   const [theme, setTheme] = useState('dark'); // Default to dark theme
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [animations, setAnimations] = useState(true);
 
   // Load saved preferences from localStorage
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const savedSidebarState = localStorage.getItem('sidebarCollapsed');
-    const savedAnimations = localStorage.getItem('animations');
+    try {
+      console.log('🔧 ThemeProvider: Loading saved preferences...');
+      const savedTheme = localStorage.getItem('theme');
+      const savedSidebarState = localStorage.getItem('sidebarCollapsed');
+      const savedAnimations = localStorage.getItem('animations');
 
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-    if (savedSidebarState !== null) {
-      setSidebarCollapsed(JSON.parse(savedSidebarState));
-    }
-    if (savedAnimations !== null) {
-      setAnimations(JSON.parse(savedAnimations));
+      console.log('🔧 ThemeProvider: Found saved preferences:', {
+        theme: savedTheme,
+        sidebar: savedSidebarState,
+        animations: savedAnimations
+      });
+
+      if (savedTheme) {
+        setTheme(savedTheme);
+      }
+      if (savedSidebarState !== null) {
+        setSidebarCollapsed(JSON.parse(savedSidebarState));
+      }
+      if (savedAnimations !== null) {
+        setAnimations(JSON.parse(savedAnimations));
+      }
+      console.log('🔧 ThemeProvider: Preferences loaded successfully');
+    } catch (error) {
+      console.error('❌ ThemeProvider: Error loading preferences:', error);
     }
   }, []);
 

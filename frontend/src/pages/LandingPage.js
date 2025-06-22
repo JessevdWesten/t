@@ -18,6 +18,7 @@ import {
 import './LandingPage.css';
 
 const LandingPage = () => {
+  console.log('🔧 LandingPage: Component initializing...');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
