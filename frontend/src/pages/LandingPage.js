@@ -210,20 +210,50 @@ const LandingPage = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <div className="phone-mockup">
-              <img src="/images/app-mockup.png" alt="FitGenius App" />
+              <div className="app-mockup-visual">
+                <div className="mockup-screen">
+                  <div className="mockup-header">
+                    <div className="mockup-dots">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <div className="mockup-title">FitGenius</div>
+                  </div>
+                  <div className="mockup-content">
+                    <div className="mockup-chart">
+                      <div className="chart-bar" style={{height: '60%'}}></div>
+                      <div className="chart-bar" style={{height: '80%'}}></div>
+                      <div className="chart-bar" style={{height: '45%'}}></div>
+                      <div className="chart-bar" style={{height: '90%'}}></div>
+                      <div className="chart-bar" style={{height: '70%'}}></div>
+                    </div>
+                    <div className="mockup-stats">
+                      <div className="stat-item">
+                        <FiActivity size={16} />
+                        <span>2,450 cal</span>
+                      </div>
+                      <div className="stat-item">
+                        <FiTarget size={16} />
+                        <span>8/10 goals</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="floating-elements">
               <div className="floating-card card-1">
                 <FiActivity className="card-icon" />
-                <span>Calories Burned: 420</span>
+                <span>💪 Workout Complete!</span>
               </div>
               <div className="floating-card card-2">
                 <FiAward className="card-icon" />
-                <span>New Achievement!</span>
+                <span>🏆 New Achievement!</span>
               </div>
               <div className="floating-card card-3">
                 <FiTrendingUp className="card-icon" />
-                <span>Strength +12%</span>
+                <span>📈 Strength +25%</span>
               </div>
             </div>
           </motion.div>
