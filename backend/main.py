@@ -17,6 +17,9 @@ from config import settings
 from routers import auth, users, exercises, recipes, plans
 from database import engine, Base
 
+# Global database availability flag
+database_available = False
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -163,37 +166,43 @@ custom_css = """
 </style>
 """
 
-def create_tables_with_retry(max_retries=5, delay=5):
-    """Create database tables with enhanced retry logic and logging."""
+def create_tables_with_retry(max_retries=3, delay=2):
+    """Create database tables with graceful failure handling."""
     for attempt in range(max_retries):
         try:
             logger.info(f"🔄 Attempting to create database tables (attempt {attempt + 1}/{max_retries})")
             Base.metadata.create_all(bind=engine)
             logger.info("✅ Database tables created successfully")
             return True
-        except OperationalError as e:
+        except Exception as e:
             logger.warning(f"❌ Database connection failed on attempt {attempt + 1}: {e}")
             if attempt < max_retries - 1:
                 logger.info(f"⏳ Retrying in {delay} seconds...")
                 time.sleep(delay)
             else:
-                logger.error("💥 Failed to connect to database after all attempts")
-                raise
+                logger.warning("⚠️ Database connection failed - API will start in limited mode")
+                logger.info("💡 Database-dependent features will be unavailable until connection is restored")
+                return False
     return False
 
 @app.on_event("startup")
 async def startup_event():
-    """Enhanced startup with comprehensive initialization."""
+    """Graceful startup that works even without database."""
     logger.info("🚀 Starting FitGenius API...")
     start_time = time.time()
     
-    # Initialize database
-    create_tables_with_retry()
+    # Try to initialize database (non-blocking)
+    global database_available
+    database_available = create_tables_with_retry()
     
     # Log startup completion
     startup_time = time.time() - start_time
-    logger.info(f"✅ FitGenius API startup completed in {startup_time:.2f}s")
-    logger.info("🌟 All systems operational - Ready to transform lives!")
+    status = "✅ fully operational" if database_available else "⚠️ running in limited mode (database unavailable)"
+    logger.info(f"🎉 FitGenius API startup completed in {startup_time:.2f}s - {status}")
+    
+    if not database_available:
+        logger.info("📚 API documentation and basic endpoints are available")
+        logger.info("🔧 Check /health endpoint for database status")
 
 # Enhanced CORS with production settings
 allowed_origins = [
@@ -258,21 +267,33 @@ async def swagger_ui_redirect():
 # Simple and stable root endpoint
 @app.get("/", include_in_schema=False)
 async def root():
-    """Simple API welcome message"""
+    """Simple API welcome message with database status"""
+    # Check database status for root endpoint
+    db_connected = False
+    try:
+        with engine.connect() as conn:
+            conn.execute("SELECT 1")
+        db_connected = True
+    except:
+        pass
+    
     return {
         "message": "🏋️ Welcome to FitGenius API",
         "version": "2.0.0",
         "status": "operational",
+        "database_status": "✅ connected" if db_connected else "⚠️ limited mode",
         "documentation": "/docs",
-        "redoc": "/redoc",
+        "redoc": "/redoc", 
         "health": "/health",
+        "database_status_detail": "/database-status",
         "features": [
-            "🔐 Secure Authentication",
-            "💪 Exercise Library", 
-            "🥗 Nutrition Tracking",
-            "📋 Personalized Plans",
-            "📊 Analytics Dashboard"
-        ]
+            "🔐 Secure Authentication" + ("" if db_connected else " (requires database)"),
+            "💪 Exercise Library" + ("" if db_connected else " (requires database)"), 
+            "🥗 Nutrition Tracking" + ("" if db_connected else " (requires database)"),
+            "📋 Personalized Plans" + ("" if db_connected else " (requires database)"),
+            "📚 API Documentation (always available)"
+        ],
+        "note": "All features operational" if db_connected else "Running in limited mode - check /database-status for details"
     }
 
 # Enhanced API info endpoint
@@ -309,45 +330,93 @@ async def api_info():
         }
     }
 
-# Enhanced health check with detailed system status
+# Graceful health check that works with or without database
 @app.get("/health", tags=["🔧 System"])
 async def health_check():
-    """Comprehensive health check with system diagnostics"""
+    """Health check with graceful database handling"""
     start_time = time.time()
     
+    # Test database connection
+    db_status = "unknown"
+    db_response_time = None
+    db_error = None
+    
     try:
-        # Test database connection
+        db_start = time.time()
         with engine.connect() as conn:
-            conn.execute("SELECT 1")
-        
-        db_status = "healthy"
-        db_response_time = time.time() - start_time
-        
+            result = conn.execute("SELECT 1")
+            if result:
+                db_status = "healthy"
+                db_response_time = time.time() - db_start
     except Exception as e:
-        logger.error(f"❌ Health check failed: {e}")
         db_status = "unhealthy"
-        db_response_time = None
-        
+        db_error = str(e)[:100]  # Truncate error message
+        logger.warning(f"⚠️ Database health check failed: {e}")
+    
+    # API is always healthy if it can respond
+    api_status = "healthy"
+    overall_status = "healthy" if db_status == "healthy" else "degraded"
+    
     return {
-        "status": "healthy" if db_status == "healthy" else "degraded",
+        "status": overall_status,
         "timestamp": datetime.now().isoformat(),
         "version": "2.0.0",
         "services": {
             "api": {
-                "status": "healthy",
+                "status": api_status,
                 "response_time_ms": round((time.time() - start_time) * 1000, 2)
             },
             "database": {
                 "status": db_status,
-                "response_time_ms": round(db_response_time * 1000, 2) if db_response_time else None
+                "response_time_ms": round(db_response_time * 1000, 2) if db_response_time else None,
+                "error": db_error if db_error else None
             }
         },
         "system": {
-            "memory_usage": "healthy",
-            "cpu_usage": "healthy", 
-            "disk_space": "healthy"
-        }
+            "environment": os.getenv("ENVIRONMENT", "production"),
+            "mode": "full" if db_status == "healthy" else "limited"
+        },
+        "message": "All systems operational" if db_status == "healthy" else "API operational, database connection issues"
     }
+
+@app.get("/database-status", tags=["🔧 System"])
+async def database_status():
+    """Check database connectivity and available features"""
+    try:
+        with engine.connect() as conn:
+            conn.execute("SELECT 1")
+        
+        return {
+            "database_connected": True,
+            "status": "✅ Database is operational",
+            "available_features": [
+                "🔐 User authentication and registration",
+                "💪 Exercise library and tracking", 
+                "🥗 Recipe database and meal planning",
+                "📋 Personalized workout and nutrition plans",
+                "👤 User profiles and preferences"
+            ],
+            "message": "All database-dependent features are available"
+        }
+    except Exception as e:
+        return {
+            "database_connected": False,
+            "status": "⚠️ Database connection unavailable",
+            "error": str(e)[:100],
+            "available_features": [
+                "📚 API documentation (/docs, /redoc)",
+                "🔧 System health checks (/health)",
+                "📊 API information (/api/info)"
+            ],
+            "unavailable_features": [
+                "🔐 User authentication (requires database)",
+                "💪 Exercise tracking (requires database)",
+                "🥗 Recipe management (requires database)",
+                "📋 Workout plans (requires database)"
+            ],
+            "message": "API is running in limited mode. Database-dependent features are unavailable.",
+            "help": "Check your DATABASE_URL environment variable and ensure Supabase is accessible"
+        }
 
 if __name__ == "__main__":
     import uvicorn
