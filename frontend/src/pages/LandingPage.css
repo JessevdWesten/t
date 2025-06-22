@@ -108,7 +108,7 @@ section[id] {
 }
 
 /* Button Styles */
-.btn-primary, .btn-secondary {
+.btn-primary, .btn-secondary, .btn-link {
   padding: 0.75rem 1.5rem;
   border-radius: 12px;
   text-decoration: none;
@@ -945,4 +945,18 @@ section[id] {
   .pricing-card.featured {
     transform: none;
   }
+}
+
+.btn-link {
+  background: transparent;
+  color: #cbd5e1;
+  border: none;
+  padding: 0.5rem 0;
+  text-transform: none;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: #667eea;
 } 

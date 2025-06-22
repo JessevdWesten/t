@@ -124,8 +124,18 @@ const LandingPage = () => {
 
           {/* Auth Buttons */}
           <div className="nav-auth desktop-nav">
-            <a href="#login" className="btn-secondary">Login</a>
-            <a href="#register" className="btn-primary">Sign Up Free</a>
+            <button 
+              onClick={() => window.location.hash = '#login'}
+              className="btn-secondary"
+            >
+              Login
+            </button>
+            <button 
+              onClick={() => window.location.hash = '#register'}
+              className="btn-primary"
+            >
+              Sign Up Free
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -149,10 +159,24 @@ const LandingPage = () => {
             <a href="#about" onClick={() => setIsMenuOpen(false)}>About</a>
             <a href="#testimonials" onClick={() => setIsMenuOpen(false)}>Reviews</a>
             <a href="#pricing" onClick={() => setIsMenuOpen(false)}>Pricing</a>
-            <a href="#login" onClick={() => setIsMenuOpen(false)}>Login</a>
-            <a href="#register" className="btn-primary" onClick={() => setIsMenuOpen(false)}>
+            <button 
+              onClick={() => {
+                setIsMenuOpen(false);
+                window.location.hash = '#login';
+              }}
+              className="btn-link"
+            >
+              Login
+            </button>
+            <button 
+              onClick={() => {
+                setIsMenuOpen(false);
+                window.location.hash = '#register';
+              }}
+              className="btn-primary"
+            >
               Sign Up Free
-            </a>
+            </button>
           </motion.div>
         )}
       </nav>
@@ -192,10 +216,13 @@ const LandingPage = () => {
             </motion.div>
 
             <motion.div variants={fadeInUp} className="hero-actions">
-              <a href="#register" className="btn-primary large">
+              <button 
+                onClick={() => window.location.hash = '#register'}
+                className="btn-primary large"
+              >
                 Start Your Journey Free
                 <FiArrowRight />
-              </a>
+              </button>
               <button className="btn-play">
                 <FiPlay />
                 Watch Demo
@@ -330,10 +357,13 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              <a href="#register" className="btn-primary">
+              <button 
+                onClick={() => window.location.hash = '#register'}
+                className="btn-primary"
+              >
                 Get Started Today
                 <FiArrowRight />
-              </a>
+              </button>
             </motion.div>
 
             <motion.div 
@@ -442,9 +472,12 @@ const LandingPage = () => {
                 <li><FiCheck /> Progress tracking</li>
                 <li><FiCheck /> Community access</li>
               </ul>
-              <a href="#register" className="btn-secondary full-width">
+              <button 
+                onClick={() => window.location.hash = '#register'}
+                className="btn-secondary full-width"
+              >
                 Get Started Free
-              </a>
+              </button>
             </motion.div>
 
             <motion.div className="pricing-card featured" variants={fadeInUp}>
@@ -462,9 +495,12 @@ const LandingPage = () => {
                 <li><FiCheck /> Nutrition tracking</li>
                 <li><FiCheck /> Premium support</li>
               </ul>
-              <a href="#register" className="btn-primary full-width">
+              <button 
+                onClick={() => window.location.hash = '#register'}
+                className="btn-primary full-width"
+              >
                 Start Pro Trial
-              </a>
+              </button>
             </motion.div>
 
             <motion.div className="pricing-card" variants={fadeInUp}>
@@ -481,9 +517,12 @@ const LandingPage = () => {
                 <li><FiCheck /> Priority support</li>
                 <li><FiCheck /> Advanced integrations</li>
               </ul>
-              <a href="#register" className="btn-secondary full-width">
+              <button 
+                onClick={() => window.location.hash = '#register'}
+                className="btn-secondary full-width"
+              >
                 Go Premium
-              </a>
+              </button>
             </motion.div>
           </motion.div>
         </div>
@@ -505,10 +544,13 @@ const LandingPage = () => {
               Start free today and see the difference AI-powered fitness can make.
             </p>
             <div className="cta-actions">
-              <a href="#register" className="btn-primary large">
+              <button 
+                onClick={() => window.location.hash = '#register'}
+                className="btn-primary large"
+              >
                 Start Your Free Journey
                 <FiArrowRight />
-              </a>
+              </button>
               <span className="cta-note">No credit card required • Free forever plan available</span>
             </div>
           </motion.div>

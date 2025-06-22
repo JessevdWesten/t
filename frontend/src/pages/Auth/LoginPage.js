@@ -224,11 +224,22 @@ const LoginPage = () => {
 
             {/* Sign Up Link */}
             <motion.div className="auth-footer" variants={itemVariants}>
-              <p>
-                New to FitGenius?{' '}
-                <a href="#register" className="auth-link">
-                  Create an account
-                </a>
+              <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#94a3b8' }}>
+                Don't have an account?{' '}
+                <button 
+                  onClick={() => window.location.hash = '#register'}
+                  className="auth-link"
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    color: '#667eea', 
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    font: 'inherit'
+                  }}
+                >
+                  Sign up here
+                </button>
               </p>
               
               <div className="help-links">

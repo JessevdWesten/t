@@ -342,11 +342,22 @@ const RegisterPage = () => {
 
             {/* Sign In Link */}
             <motion.div className="auth-footer" variants={itemVariants}>
-              <p>
+              <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#94a3b8' }}>
                 Already have an account?{' '}
-                <a href="#login" className="auth-link">
+                <button 
+                  onClick={() => window.location.hash = '#login'}
+                  className="auth-link"
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    color: '#667eea', 
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    font: 'inherit'
+                  }}
+                >
                   Sign in here
-                </a>
+                </button>
               </p>
               
               <div className="help-links">
