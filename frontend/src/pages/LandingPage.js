@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { useIntersectionObserver } from 'react-intersection-observer';
 import { 
@@ -110,10 +109,10 @@ const LandingPage = () => {
       {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-container">
-          <Link to="/" className="nav-logo">
+          <a href="#" className="nav-logo">
             <span className="logo-icon">🏋️</span>
             <span className="logo-text">FitGenius</span>
-          </Link>
+          </a>
 
           {/* Desktop Navigation */}
           <div className="nav-links desktop-nav">
@@ -125,8 +124,8 @@ const LandingPage = () => {
 
           {/* Auth Buttons */}
           <div className="nav-auth desktop-nav">
-            <Link to="/login" className="btn-secondary">Login</Link>
-            <Link to="/register" className="btn-primary">Sign Up Free</Link>
+            <a href="#login" className="btn-secondary">Login</a>
+            <a href="#register" className="btn-primary">Sign Up Free</a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -150,10 +149,10 @@ const LandingPage = () => {
             <a href="#about" onClick={() => setIsMenuOpen(false)}>About</a>
             <a href="#testimonials" onClick={() => setIsMenuOpen(false)}>Reviews</a>
             <a href="#pricing" onClick={() => setIsMenuOpen(false)}>Pricing</a>
-            <Link to="/login" onClick={() => setIsMenuOpen(false)}>Login</Link>
-            <Link to="/register" className="btn-primary" onClick={() => setIsMenuOpen(false)}>
+            <a href="#login" onClick={() => setIsMenuOpen(false)}>Login</a>
+            <a href="#register" className="btn-primary" onClick={() => setIsMenuOpen(false)}>
               Sign Up Free
-            </Link>
+            </a>
           </motion.div>
         )}
       </nav>
@@ -193,10 +192,10 @@ const LandingPage = () => {
             </motion.div>
 
             <motion.div variants={fadeInUp} className="hero-actions">
-              <Link to="/register" className="btn-primary large">
+              <a href="#register" className="btn-primary large">
                 Start Your Journey Free
                 <FiArrowRight />
-              </Link>
+              </a>
               <button className="btn-play">
                 <FiPlay />
                 Watch Demo
@@ -301,10 +300,10 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              <Link to="/register" className="btn-primary">
+              <a href="#register" className="btn-primary">
                 Get Started Today
                 <FiArrowRight />
-              </Link>
+              </a>
             </motion.div>
 
             <motion.div 
@@ -413,9 +412,9 @@ const LandingPage = () => {
                 <li><FiCheck /> Progress tracking</li>
                 <li><FiCheck /> Community access</li>
               </ul>
-              <Link to="/register" className="btn-secondary full-width">
+              <a href="#register" className="btn-secondary full-width">
                 Get Started Free
-              </Link>
+              </a>
             </motion.div>
 
             <motion.div className="pricing-card featured" variants={fadeInUp}>
@@ -433,9 +432,9 @@ const LandingPage = () => {
                 <li><FiCheck /> Nutrition tracking</li>
                 <li><FiCheck /> Premium support</li>
               </ul>
-              <Link to="/register" className="btn-primary full-width">
+              <a href="#register" className="btn-primary full-width">
                 Start Pro Trial
-              </Link>
+              </a>
             </motion.div>
 
             <motion.div className="pricing-card" variants={fadeInUp}>
@@ -452,9 +451,9 @@ const LandingPage = () => {
                 <li><FiCheck /> Priority support</li>
                 <li><FiCheck /> Advanced integrations</li>
               </ul>
-              <Link to="/register" className="btn-secondary full-width">
+              <a href="#register" className="btn-secondary full-width">
                 Go Premium
-              </Link>
+              </a>
             </motion.div>
           </motion.div>
         </div>
@@ -476,10 +475,10 @@ const LandingPage = () => {
               Start free today and see the difference AI-powered fitness can make.
             </p>
             <div className="cta-actions">
-              <Link to="/register" className="btn-primary large">
+              <a href="#register" className="btn-primary large">
                 Start Your Free Journey
                 <FiArrowRight />
-              </Link>
+              </a>
               <span className="cta-note">No credit card required • Free forever plan available</span>
             </div>
           </motion.div>
@@ -491,10 +490,10 @@ const LandingPage = () => {
         <div className="container">
           <div className="footer-content">
             <div className="footer-brand">
-              <Link to="/" className="footer-logo">
+              <a href="#" className="footer-logo">
                 <span className="logo-icon">🏋️</span>
                 <span className="logo-text">FitGenius</span>
-              </Link>
+              </a>
               <p>Your AI-powered fitness companion for a healthier, stronger you.</p>
             </div>
 

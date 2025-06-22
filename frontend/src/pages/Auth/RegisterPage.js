@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../contexts/AuthContext';
@@ -19,7 +18,6 @@ import './AuthPages.css';
 
 const RegisterPage = () => {
   const { register: registerUser } = useAuth();
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,7 +72,8 @@ const RegisterPage = () => {
     });
 
     if (result.success) {
-      navigate('/dashboard');
+      // Redirect to dashboard using hash routing
+      window.location.hash = '#dashboard';
     } else {
       setError('email', {
         type: 'manual',
@@ -113,10 +112,10 @@ const RegisterPage = () => {
           transition={{ duration: 0.8 }}
         >
           <div className="brand-content">
-            <Link to="/" className="brand-logo">
+            <a href="#" className="brand-logo">
               <span className="logo-icon">🏋️</span>
               <span className="logo-text">FitGenius</span>
-            </Link>
+            </a>
             
             <h1>Start Your Journey!</h1>
             <p>
@@ -315,7 +314,7 @@ const RegisterPage = () => {
                     })}
                   />
                   <span className="checkbox-custom"></span>
-                  I agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>
+                  I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>
                 </label>
                 {errors.terms && (
                   <span className="error-message">{errors.terms.message}</span>
@@ -345,15 +344,15 @@ const RegisterPage = () => {
             <motion.div className="auth-footer" variants={itemVariants}>
               <p>
                 Already have an account?{' '}
-                <Link to="/login" className="auth-link">
+                <a href="#login" className="auth-link">
                   Sign in here
-                </Link>
+                </a>
               </p>
               
               <div className="help-links">
-                <Link to="/help">Need Help?</Link>
-                <Link to="/privacy">Privacy Policy</Link>
-                <Link to="/terms">Terms of Service</Link>
+                <a href="#help">Need Help?</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Service</a>
               </div>
             </motion.div>
           </motion.div>

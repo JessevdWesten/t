@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../contexts/AuthContext';
@@ -16,8 +15,6 @@ import './AuthPages.css';
 
 const LoginPage = () => {
   const { login } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,8 +25,6 @@ const LoginPage = () => {
     setError
   } = useForm();
 
-  const from = location.state?.from?.pathname || '/dashboard';
-
   const onSubmit = async (data) => {
     setIsLoading(true);
     
@@ -39,7 +34,8 @@ const LoginPage = () => {
     });
 
     if (result.success) {
-      navigate(from, { replace: true });
+      // Redirect to dashboard using hash routing
+      window.location.hash = '#dashboard';
     } else {
       setError('email', {
         type: 'manual',
@@ -78,10 +74,10 @@ const LoginPage = () => {
           transition={{ duration: 0.8 }}
         >
           <div className="brand-content">
-            <Link to="/" className="brand-logo">
+            <a href="#" className="brand-logo">
               <span className="logo-icon">🏋️</span>
               <span className="logo-text">FitGenius</span>
-            </Link>
+            </a>
             
             <h1>Welcome Back!</h1>
             <p>
@@ -202,9 +198,9 @@ const LoginPage = () => {
                   <span className="checkbox-custom"></span>
                   Remember me
                 </label>
-                <Link to="/forgot-password" className="forgot-link">
+                <a href="#forgot-password" className="forgot-link">
                   Forgot Password?
-                </Link>
+                </a>
               </div>
 
               {/* Submit Button */}
@@ -230,15 +226,15 @@ const LoginPage = () => {
             <motion.div className="auth-footer" variants={itemVariants}>
               <p>
                 New to FitGenius?{' '}
-                <Link to="/register" className="auth-link">
+                <a href="#register" className="auth-link">
                   Create an account
-                </Link>
+                </a>
               </p>
               
               <div className="help-links">
-                <Link to="/help">Need Help?</Link>
-                <Link to="/privacy">Privacy Policy</Link>
-                <Link to="/terms">Terms of Service</Link>
+                <a href="#help">Need Help?</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Service</a>
               </div>
             </motion.div>
           </motion.div>
