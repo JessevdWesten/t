@@ -209,6 +209,7 @@ allowed_origins = [
     "http://localhost:3000", "http://127.0.0.1:3000",  # Local development
     "https://fitgenius.com", "https://www.fitgenius.com",  # Production
     "https://app.fitgenius.com",  # App subdomain
+    "https://courageous-paletas-373f9e.netlify.app",  # Netlify frontend
 ]
 
 if settings.allowed_origins:
