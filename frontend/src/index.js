@@ -1,5 +1,3 @@
-console.log('🔧 INDEX: Starting application initialization...');
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -9,6 +7,7 @@ import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
 import GlobalStyles from './styles/GlobalStyles';
 
+console.log('🔧 INDEX: Starting application initialization...');
 console.log('🔧 INDEX: All imports successful');
 
 // Create a client
