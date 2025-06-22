@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.openapi.docs import (
@@ -210,6 +210,7 @@ allowed_origins = [
     "https://fitgenius.com", "https://www.fitgenius.com",  # Production
     "https://app.fitgenius.com",  # App subdomain
     "https://courageous-paletas-373f9e.netlify.app",  # Netlify frontend
+    "*",  # Allow all origins for now to debug CORS issue
 ]
 
 if settings.allowed_origins:
@@ -223,6 +224,22 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["X-Total-Count", "X-Page-Count"],
 )
+
+# Add explicit OPTIONS handler to ensure preflight requests work
+@app.options("/api/{path:path}")
+async def options_handler(request: Request, path: str):
+    """Handle OPTIONS preflight requests explicitly"""
+    origin = request.headers.get("origin", "")
+    
+    response_headers = {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+        "Access-Control-Allow-Headers": "Accept, Accept-Language, Content-Language, Content-Type, Authorization, X-Requested-With, Origin",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Max-Age": "3600"
+    }
+    
+    return Response(status_code=200, headers=response_headers)
 
 # Include routers with enhanced organization and emojis
 app.include_router(auth.router, prefix="/api/auth", tags=["🔐 Authentication"])
